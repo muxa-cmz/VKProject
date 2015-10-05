@@ -1,10 +1,10 @@
 import org.json.simple.parser.ParseException;
 
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 //import org.apache.http.HttpResponse;
-
-
 
 public class MyHTTPClient {
 
@@ -33,7 +33,7 @@ public class MyHTTPClient {
         return id;
     }
 
-    private List<String> getListFriends(String id) throws ParseException {
+    private List<String> getListFriends(String id) throws ParseException, SQLException {
         List<String> ListFriends = new ArrayList<String>();
         String html = httpObj.getHTML("friends.get" + "?", "user_id=" + id);
         String json = html;
@@ -43,8 +43,14 @@ public class MyHTTPClient {
 
     private List<String> getListAudioUsers(List<String> ListFriends) throws ParseException {
         List<String> ListAudioAllUser = new ArrayList<String>();
-        String token = "786e9fadff70bee5e3c2e439ade63f88e77f3956be7ddba5c41b5050f36a77ae1dbf0d0f6de1808a8ff71";
+        String token = "fa5928fafa8e246d20911e1c160c396a7066dca6ae2a3160857d0cc618ec44f6607d1423ddd725e960409";
         for (int i = 0; i < ListFriends.size(); i++) {
+            try {
+                Thread.sleep(1500);
+                System.out.print(".");
+            } catch (InterruptedException ie) {
+                //Handle exception
+            }
             String html = httpObj.getHTML("audio.get" + "?", "user_id=" + ListFriends.get(i) + "&v=5.37&access_token=" + token);
             String json = html;
             ListAudioAllUser.addAll(ParseAudioUser(html));
@@ -59,7 +65,7 @@ public class MyHTTPClient {
         return ListAudioUser;
     }
 
-    public void TopArtist(String urlToRead, int number) throws ParseException {
+    public void TopArtist(String urlToRead, int number) throws ParseException, SQLException {
         statisticsHandlerObj.Top(getListAudioUsers(getListFriends(getID(urlToRead))), number);
 
     }

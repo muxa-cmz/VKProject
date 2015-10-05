@@ -3,6 +3,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
 public class JSONHandler {
 
     private JSONParser parser = new JSONParser();
+    private DBHandler dbHandler = new DBHandler();
     private JSONArray getJSONArray(String json) throws ParseException {
-        //JSONParser parser = new JSONParser();
         Object obj = parser.parse(json);
         JSONObject jsonObj = (JSONObject) obj;
         JSONArray jsonArray = (JSONArray) jsonObj.get("response");
@@ -27,12 +28,18 @@ public class JSONHandler {
         return id;
     }
 
-    public List<String> getListFriendsOfJSON(String json) throws ParseException {
+    public List<String> getListFriendsOfJSON(String json) throws ParseException, SQLException {
         List<String> ListFriends = new ArrayList<String>();
+        //DBHandler dbHandler = new DBHandler();
+        //Connection connection = dbHandler.getConnection();
+        dbHandler.openConnection();
         JSONArray jsonArray = getJSONArray(json);
         for (int i = 0; i < jsonArray.size(); i++){
             ListFriends.add(jsonArray.get(i).toString());
+            dbHandler.InsertToManTable(jsonArray.get(i).toString());
         }
+        //connection.close();
+        dbHandler.closeConnection();
         return ListFriends;
     }
 
