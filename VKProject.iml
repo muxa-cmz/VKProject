@@ -72,5 +72,8 @@
     <orderEntry type="library" name="logback-classic-0.9" level="project" />
     <orderEntry type="library" name="logback-classic-1.0.11-sources" level="project" />
     <orderEntry type="library" name="jooq-3.1.0" level="project" />
+    <orderEntry type="library" name="converter-gson-2.0.0-beta2" level="project" />
+    <orderEntry type="library" name="jooq-3.1.0" level="project" />
+    <orderEntry type="library" name="okhttp-2.5.0" level="project" />
   </component>
 </module>
