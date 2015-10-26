@@ -1,16 +1,22 @@
+package project;
+
 import org.json.simple.parser.ParseException;
+import project.JSONHandler;
+import project.StatisticsHandler;
+import project.httpHandler;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.apache.http.HttpResponse;
+//import org.apache.http.impl.client.DefaultHttpClient;
 
-public class MyHTTPClient {
+public class VKClient {
 
     private httpHandler httpObj = new httpHandler();
     private JSONHandler jsonHandlerObj = new JSONHandler();
     private StatisticsHandler statisticsHandlerObj = new StatisticsHandler();
+//    String access_token = "";
 
     private String getNickname(String urlToRead){
         String result = "";
@@ -33,7 +39,7 @@ public class MyHTTPClient {
         return id;
     }
 
-    private List<String> getListFriends(String id) throws ParseException, SQLException {
+    private List<String> getListFriends(String id) throws ParseException, SQLException, org.json.simple.parser.ParseException {
         List<String> ListFriends = new ArrayList<String>();
         String html = httpObj.getHTML("friends.get" + "?", "user_id=" + id);
         String json = html;
@@ -41,7 +47,7 @@ public class MyHTTPClient {
         return ListFriends;
     }
 
-    private List<String> getListAudioUsers(List<String> ListFriends) throws ParseException {
+    private List<String> getListAudioUsers(List<String> ListFriends) throws ParseException, org.json.simple.parser.ParseException {
         List<String> ListAudioAllUser = new ArrayList<String>();
         String token = "fa5928fafa8e246d20911e1c160c396a7066dca6ae2a3160857d0cc618ec44f6607d1423ddd725e960409";
         for (int i = 0; i < ListFriends.size(); i++) {
@@ -69,6 +75,7 @@ public class MyHTTPClient {
         statisticsHandlerObj.Top(getListAudioUsers(getListFriends(getID(urlToRead))), number);
 
     }
+
     // получение токена
     // https://oauth.vk.com/access_token?client_id=5072633&client_secret=PGtS9I7T1srL0ft27L2j&grant_type=client_credentials
 

@@ -1,3 +1,5 @@
+package project;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,7 +15,6 @@ import java.util.List;
 public class JSONHandler {
 
     private JSONParser parser = new JSONParser();
-    private DBHandler dbHandler = new DBHandler();
     private JSONArray getJSONArray(String json) throws ParseException {
         Object obj = parser.parse(json);
         JSONObject jsonObj = (JSONObject) obj;
@@ -30,16 +31,10 @@ public class JSONHandler {
 
     public List<String> getListFriendsOfJSON(String json) throws ParseException, SQLException {
         List<String> ListFriends = new ArrayList<String>();
-        //DBHandler dbHandler = new DBHandler();
-        //Connection connection = dbHandler.getConnection();
-        dbHandler.openConnection();
         JSONArray jsonArray = getJSONArray(json);
         for (int i = 0; i < jsonArray.size(); i++){
             ListFriends.add(jsonArray.get(i).toString());
-            dbHandler.InsertToManTable(jsonArray.get(i).toString());
         }
-        //connection.close();
-        dbHandler.closeConnection();
         return ListFriends;
     }
 

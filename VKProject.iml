@@ -43,5 +43,34 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/httpcore-4.0-alpha6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/httpclient-4.0-alpha1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="vkontakte-http-api-0.2" level="project" />
+    <orderEntry type="library" name="httpclient-4.5.1" level="project" />
+    <orderEntry type="library" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" name="httpcore-4.4.3" level="project" />
+    <orderEntry type="library" name="com.springsource.org.codehaus.jackson.mapper-1.4.2" level="project" />
+    <orderEntry type="library" name="jackson-all-1.7.4" level="project" />
+    <orderEntry type="library" name="slf4j" level="project" />
+    <orderEntry type="library" name="logback-core-0.9.6" level="project" />
+    <orderEntry type="library" name="logback-classic-0.9" level="project" />
+    <orderEntry type="library" name="logback-classic-1.0.11-sources" level="project" />
+    <orderEntry type="library" name="jooq-3.1.0" level="project" />
   </component>
 </module>

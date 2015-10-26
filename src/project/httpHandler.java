@@ -1,12 +1,13 @@
+package project;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Михаил on 20.09.2015.
+ * Created by Михаил on 24.10.2015.
  */
-
 class httpHandler {
 
     public String getHTML(String apiFunction, String param) {

@@ -1,7 +1,11 @@
+package project;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 
-public class DBHandler {
+public class DBHandler<T> {
     private Connection connection = null;
 
     public Connection getConnection() {
@@ -16,7 +20,13 @@ public class DBHandler {
 
         try {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/vkproject", "root", "");
+            Properties properties=new Properties();
+            properties.setProperty("user","root");
+            properties.setProperty("password","");
+            properties.setProperty("useUnicode","true");
+            properties.setProperty("characterEncoding","utf8");
+            //connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/vkproject", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/vkproject", properties);
         }
         catch (SQLException ex){
             System.out.println("SQLException caught");
@@ -33,10 +43,4 @@ public class DBHandler {
             System.out.println("Other Error in Main.");
         }
     }
-
-    public void InsertToManTable(String idUser) throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeUpdate("INSERT INTO man (id_man, vkIDUser) VALUES (NULL," + idUser + ")");
-    }
-
 }
