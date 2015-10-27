@@ -1,6 +1,9 @@
 package entity;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Friend extends VkEntity {
+    @SerializedName("bdate")
     private String birthday;
     private String sex;
 

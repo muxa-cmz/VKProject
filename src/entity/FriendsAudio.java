@@ -1,30 +1,24 @@
 package entity;
 
 public class FriendsAudio extends Entity {
-    private int IDFriend;
-    private int IDAudio;
+    private String VkIDFriend;
+    private String IDAudio;
 
-    public FriendsAudio(int vkIDFriend, int IDAudio) {
-        IDFriend = vkIDFriend;
+    public FriendsAudio(String vkIDFriend, String IDAudio) {
+        VkIDFriend = vkIDFriend;
         this.IDAudio = IDAudio;
     }
 
-    public FriendsAudio(int ID, int IDFriend, int IDAudio) {
-        this.setID(ID);
-        this.IDFriend = IDFriend;
-        this.IDAudio = IDAudio;
-    }
-
-    public int getIDAudio() {
+    public String getIDAudio() {
         return IDAudio;
     }
-    public void setIDAudio(int IDAudio) {
+    public void setIDAudio(String IDAudio) {
         this.IDAudio = IDAudio;
     }
-    public int getIDFriend() {
-        return IDFriend;
+    public String getVkIDFriend() {
+        return VkIDFriend;
     }
-    public void setIDFriend(int IDFriend) {
-        this.IDFriend = IDFriend;
+    public void setVkIDFriend(String vkIDFriend) {
+        VkIDFriend = vkIDFriend;
     }
 }
