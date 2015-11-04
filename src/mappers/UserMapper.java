@@ -23,7 +23,9 @@ public class UserMapper implements IVkEntityMapperBase<User> {
             this.dbHandler.openConnection();
             Statement statement = this.dbHandler.getConnection().createStatement();
             SQL = "INSERT INTO Users (VkID, first_name, last_name) VALUES (\"" + user.getVkId()
-                    + "\",\"" + user.getFirstName() + "\",\"" + user.getLastName() + "\")";
+                    + "\",\"" + user.getFirstName() + "\",\"" + user.getLastName() + "\")"
+                    + "\",\"" + user.getFirst_name() + "\",\"" + user.getLast_name() + "\")";
+
             statement.executeUpdate(SQL);
         }catch (SQLException ex){
             System.out.println("SQLException caught");
