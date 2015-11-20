@@ -22,8 +22,8 @@ public class FriendMapper implements IVkEntityMapperBase<Friend> {
             this.dbHandler.openConnection();
             Statement statement = this.dbHandler.getConnection().createStatement();
             SQL = "INSERT INTO Friends (VkID, birthday, sex) VALUES (\""
-                    + friend.getVkId() + "\", \"" + friend.getBirthday()
-                    + "\", (SELECT id FROM Sex WHERE sex='" + friend.getSex() + "\'))";
+                    + friend.getVkId() + "\", \"" + friend.getBirthday() + "\", " + friend.getSex() + ")";
+                   //+ "\", (SELECT id FROM Sex WHERE sex= " + friend.getSex() + "))";
             statement.execute(SQL);
         }catch (SQLException ex){
             System.out.println("SQLException caught");

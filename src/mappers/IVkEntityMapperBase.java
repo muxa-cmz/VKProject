@@ -2,7 +2,6 @@ package mappers;
 
 import project.DBHandler;
 
-
 import java.sql.SQLException;
 
 /**
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 public interface IVkEntityMapperBase<T> {
     DBHandler dbHandler = new DBHandler();
     void Update(T object);
-    void Insert(T user);
+    void Insert(T object);
     void Delete(T object);
 
     T FindById(int id) throws SQLException;

@@ -19,8 +19,8 @@ public class Friend extends VkEntity {
         this.setVkId(VkID);
     }
 
-    public String getSex() {
-        return sex;
+    public int getSex() {
+        return Integer.parseInt(sex);
     }
     public void setSex(String sex) {
         this.sex = sex;

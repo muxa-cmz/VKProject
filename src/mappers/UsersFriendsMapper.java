@@ -18,16 +18,18 @@ public class UsersFriendsMapper implements IEntityMapperBase<UsersFriends> {
 
     }
     @Override
-    public void Insert(UsersFriends usersFriends) {
+    public void Insert(List<UsersFriends> usersFriends) {
         // SQL
         //INSERT INTO UsersFriends (VkID_User, VkID_Friend) VALUES (usersFriends.getVkIDUser(), usersFriends.getVkIDFriend());
         String SQL = "";
         try {
             this.dbHandler.openConnection();
             Statement statement = this.dbHandler.getConnection().createStatement();
-            SQL = "INSERT INTO UsersFriends (VkID_User, VkID_Friend) VALUES (\"" + usersFriends.getVkIDUser()
-                    + "\",\"" + usersFriends.getVkIDFriend() + "\")";
-            statement.executeUpdate(SQL);
+            for (UsersFriends userFriends : usersFriends) {
+                SQL = "INSERT INTO UsersFriends (ID_User, ID_Friend) VALUES (" + userFriends.getIDUser()
+                        + "," + userFriends.getIDFriend() + ")";
+                statement.executeUpdate(SQL);
+            }
         }catch (SQLException ex){
             System.out.println("SQLException caught");
             System.out.println("---");

@@ -1,9 +1,11 @@
 package mappers;
+
 import entity.Artist;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 /**
  * Created by Михаил on 24.10.2015.
@@ -17,26 +19,36 @@ public class ArtistMapper implements IEntityMapperBase<Artist> {
 
     }
     @Override
-    public void Insert(Artist artist) {
+    public void Insert(List<Artist> artists) {
         String SQL = "";
+        Statement statement = null;
         try {
             this.dbHandler.openConnection();
-            Statement statement = this.dbHandler.getConnection().createStatement();
-            SQL = "INSERT INTO Artists(name) VALUES (\'" + artist.getName() + "\')";
-            statement.execute(SQL);
+            statement = this.dbHandler.getConnection().createStatement();
         }catch (SQLException ex){
-            System.out.println("SQLException caught");
-            System.out.println("---");
-            while ( ex != null ) {
-                System.out.println("Message   : " + ex.getMessage());
-                System.out.println("SQLState  : " + ex.getSQLState());
-                System.out.println("ErrorCode : " + ex.getErrorCode());
-                System.out.println("---");
-                ex = ex.getNextException();
-            }
-        }
-        catch (Exception ex) {
             System.out.println("Other Error in Main.");
+        }catch (Exception ex) {
+            System.out.println("Other Error in Main.");
+        }
+
+
+        for (Artist artist : artists) {
+            try {
+                SQL = "INSERT INTO Artists(name) VALUES (\'" + artist.getName() + "\')";
+                statement.execute(SQL);
+            } catch (SQLException ex) {
+                System.out.println("SQLException caught");
+                System.out.println("---");
+                while (ex != null) {
+                    System.out.println("Message   : " + ex.getMessage());
+                    System.out.println("SQLState  : " + ex.getSQLState());
+                    System.out.println("ErrorCode : " + ex.getErrorCode());
+                    System.out.println("---");
+                    ex = ex.getNextException();
+                }
+            } catch (Exception ex) {
+                System.out.println("Other Error in Main.");
+            }
         }
     }
     @Override

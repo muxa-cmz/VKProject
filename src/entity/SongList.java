@@ -27,6 +27,7 @@ public class SongList {
     }
 
     public void setSongs(List<Song> songs) {
-        this.songs.addAll(songs);
+        if (!songs.isEmpty())
+            this.songs.addAll(songs);
     }
 }

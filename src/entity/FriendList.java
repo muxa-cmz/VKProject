@@ -13,7 +13,6 @@ public class FriendList {
     public FriendList() {
         friends = new ArrayList<Friend>();
     }
-
     public int getCount() {
         return count;
     }
@@ -21,11 +20,9 @@ public class FriendList {
     public void setCount(int count) {
         this.count = count;
     }
-
     public List<Friend> getFriends() {
         return friends;
     }
-
     public void setFriends(List<Friend> friends) {
         this.friends.addAll(friends);
     }

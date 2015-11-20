@@ -4,30 +4,30 @@ package entity;
  * Created by Михаил on 24.10.2015.
  */
 public class UsersFriends extends Entity {
-    private int VkIDUser;
-    private int VkIDFriend;
+    private int IDUser;
+    private int IDFriend;
 
-    public UsersFriends(int vkIDUser, int vkIDFriend) {
-        VkIDUser = vkIDUser;
-        VkIDFriend = vkIDFriend;
+    public UsersFriends(int IDUser, int IDFriend) {
+        this.IDUser = IDUser;
+        this.IDFriend = IDFriend;
     }
 
-    public UsersFriends(int ID,int vkIDUser, int vkIDFriend) {
+    public UsersFriends(int ID,int IDUser, int IDFriend) {
         this.setID(ID);
-        VkIDUser = vkIDUser;
-        VkIDFriend = vkIDFriend;
+        this.IDUser = IDUser;
+        this.IDFriend = IDFriend;
     }
 
-    public int getVkIDUser() {
-        return VkIDUser;
+    public int getIDUser() {
+        return IDUser;
     }
-    public void setVkIDUser(int vkIDUser) {
-        VkIDUser = vkIDUser;
+    public void setIDUser(int IDUser) {
+        IDUser = IDUser;
     }
-    public int getVkIDFriend() {
-        return VkIDFriend;
+    public int getIDFriend() {
+        return IDFriend;
     }
-    public void setVkIDFriend(int vkIDFriend) {
-        VkIDFriend = vkIDFriend;
+    public void setIDFriend(int vkIDFriend) {
+        this.IDFriend = IDFriend;
     }
 }

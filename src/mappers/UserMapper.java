@@ -23,7 +23,7 @@ public class UserMapper implements IVkEntityMapperBase<User> {
             this.dbHandler.openConnection();
             Statement statement = this.dbHandler.getConnection().createStatement();
             SQL = "INSERT INTO Users (VkID, first_name, last_name) VALUES (\"" + user.getVkId()
-                    + "\",\"" + user.getFirstName() + "\",\"" + user.getLastName() + "\")"
+                    //+ "\",\"" + user.getFirstName() + "\",\"" + user.getLastName() + "\")"
                     + "\",\"" + user.getFirstName() + "\",\"" + user.getLastName() + "\")";
 
             statement.executeUpdate(SQL);
@@ -42,7 +42,7 @@ public class UserMapper implements IVkEntityMapperBase<User> {
             System.out.println("Other Error in Main.");
         }
     }
-    @Override
+   @Override
     public void Delete(User user) {
 
     }

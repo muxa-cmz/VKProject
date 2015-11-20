@@ -13,22 +13,21 @@ import java.util.List;
  */
 public class ChangeMapper implements IEntityMapperBase<Change> {
     @Override
-    public void Update(Change change) {
-
-    }
+   public void Update(Change change) {    }
     @Override
-    public void Insert(Change change) {
+    public void Insert(List<Change> changes) {
         // SQL
         //INSERT INTO Changes (date_change, IDFriend, IDAudio, event) VALUES (change.getDate(), change.getIDFriend(), change.getIDAudio(), change.getChange());
         String SQL = "";
         try {
             this.dbHandler.openConnection();
             Statement statement = this.dbHandler.getConnection().createStatement();
-
-            int intbool = (change.getEvent())?1:0;
-            SQL = "INSERT INTO Changes (date_change, id_friend, id_audio, event) VALUES (\"" + change.getDate()
-                    + "\",\"" + change.getIDFriend() + "\",\"" + change.getIDAudio() + "\",\"" + intbool + "\")";
-            statement.executeUpdate(SQL);
+            for (Change change : changes) {
+                int event = (change.getEvent()) ? 1 : 0;  // true/false перевод в int 1/0
+                SQL = "INSERT INTO Changes (date_change, id_friend, id_audio, event) VALUES (\"" + change.getDate()
+                        + "\",\"" + change.getIDFriend() + "\",\"" + change.getIDAudio() + "\",\"" + event + "\")";
+                statement.executeUpdate(SQL);
+            }
         }catch (SQLException ex){
             System.out.println("SQLException caught");
             System.out.println("---");

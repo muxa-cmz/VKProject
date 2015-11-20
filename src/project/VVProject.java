@@ -1,11 +1,12 @@
 package project;
 
+import InternetToDataBase.InsertToDataBase;
 import api.Api;
-import entity.Change;
-import entity.Friend;
-import entity.Song;
-import entity.User;
-import mappers.ChangeMapper;
+import entity.*;
+import mappers.FriendMapper;
+import mappers.FriendsAudioMapper;
+import mappers.UserMapper;
+import mappers.UsersFriendsMapper;
 import org.apache.http.HttpException;
 import org.json.simple.parser.ParseException;
 
@@ -54,14 +55,87 @@ public class VVProject {
 //        myThready.start();	//Запуск потока
 
         User user = Api.getUserInfo();
-        List<Friend> friends = new ArrayList<Friend>();
-        friends.addAll(Api.getListFriend(user.getVkId()));
+        InsertToDataBase IDB = new InsertToDataBase();
+        switch (Integer.parseInt(args[2])){
+            case 1:{
+                FriendList friends = new FriendList();
+                friends.setFriends(Api.getListFriend(user.getVkId()));
 
-        List<Song> songs = new ArrayList<Song>();
-        for (int i = 0; i < 5; i++) {
-            songs.addAll(Api.getListSong(friends.get(i).getVkId()));
-            songs.clear();
+                IDB.InsertToUsersTable(user);
+                IDB.InsertToFriendsTable(friends.getFriends());               // Работает
+                IDB.InsertToUsersFriendsTable(user, friends.getFriends());    // Работает
+                List<FriendsAudio> friendsAudioList = new ArrayList<FriendsAudio>();
+                for (Friend friend : friends.getFriends()){
+                    SongList songs = new SongList();
+                    List<Song> songList = Api.getListSong(friend.getVkId());
+                    songs.setSongs(songList);
+                    IDB.InsertToArtistsTable(songs.getSongs());                // Работает
+                    IDB.InsertToAudioTable(songs.getSongs());
+                    friendsAudioList.add(new FriendsAudio(friend.getVkId(), songs.getSongs()));
+                }
+                IDB.InsertToFriendsAudioTable(friendsAudioList);
+                break;
+            }
+            case 2:{
+                String VkIDUser = user.getVkId();
+                UserMapper userMapper = new UserMapper();
+                int IDUser = userMapper.FindByVkId(VkIDUser).getID();
+
+                /*Получаем данные из базы данных*/
+                FriendsAudioMapper FAM = new FriendsAudioMapper();
+                List<FriendsAudio> oldFriendsAudioList = new ArrayList<FriendsAudio>();
+                oldFriendsAudioList.addAll(FAM.getAudiosForFriends(user)); // получили из базы список VkIDFriend и его список аудиозаписей
+                UsersFriendsMapper usersFriendsMapper = new UsersFriendsMapper();
+                List<UsersFriends> oldUserFriends = new ArrayList<UsersFriends>();
+                oldUserFriends.addAll(usersFriendsMapper.FindByIdUser(IDUser));
+                FriendMapper friendMapper = new FriendMapper();
+                List<Friend> oldListFriend = new ArrayList<Friend>();
+                for (UsersFriends usersFriends : oldUserFriends){
+                    oldListFriend.add(friendMapper.FindById(usersFriends.getIDFriend()));
+                }
+
+
+                /*Получам свежие данные из vk*/
+                FriendList newListFriends = new FriendList();
+                newListFriends.setFriends(Api.getListFriend(VkIDUser)); // получаем новый список друзей, возможно отличный от базы
+                List<FriendsAudio> newFriendsAudioList = new ArrayList<FriendsAudio>();
+                for (Friend friend : newListFriends.getFriends()){
+                    SongList songs = new SongList();
+                    List<Song> songList = Api.getListSong(friend.getVkId());
+                    songs.setSongs(songList);
+                    newFriendsAudioList.add(new FriendsAudio(friend.getVkId(), songs.getSongs()));
+                }
+
+                /*Проверка на то что у нашего чувака не появилось новых друзей*/
+                int i = 0;
+                List<Friend> addedFriend = new ArrayList<Friend>();
+                for (Friend newFriend : newListFriends.getFriends()){
+                    String newVkIDFriend = newFriend.getVkId();
+                    for (Friend oldFriend : oldListFriend){
+                        String oldVkIDFriend = oldFriend.getVkId();
+                        if (!oldVkIDFriend.equals(newVkIDFriend)){
+                            i++;
+                        }
+                    }
+                    if (i == oldListFriend.size()) {
+                        addedFriend.add(newFriend);
+                    }
+                    i = 0;
+
+                }
+
+                /*Если есть кого добавить в БД, то добавляем*/
+                if (addedFriend.size() != 0){
+                    IDB.InsertToFriendsTable(addedFriend);
+                }
+                break;
+            }
         }
+
+
+
+
+
 
         System.out.println(user.getFirstName() + " " + user.getLastName() + " id = " + user.getVkId());
     }

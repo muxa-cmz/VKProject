@@ -18,12 +18,19 @@ public class Song extends Entity {
     }
 
     public String getArtistName() {
+        if (this.ArtistName.contains("\'")){
+            this.ArtistName = this.ArtistName.replaceAll("'", "_");
+        }
         return ArtistName;
     }
     public void setArtistName(String ArtistName) {
         this.ArtistName = ArtistName;
     }
     public String getTitle() {
+        if (this.title.contains("\'") || this.title.contains(";")){
+            this.title = this.title.replaceAll("'", "_");
+            this.title = this.title.replaceAll(";", "_");
+        }
         return title;
     }
     public void setTitle(String title) {
