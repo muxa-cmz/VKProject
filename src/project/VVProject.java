@@ -62,6 +62,54 @@ public class VVProject {
     }
 
 
+    public static List<Song> addedSongs(SongList newListSongs, List<Song> oldListSongs) throws SQLException {
+        int i = 0;
+        List<Song> addedSong = new ArrayList<Song>();
+        for (Song newSong : newListSongs.getSongs()){
+            String newTitleSong = newSong.getTitle();
+            String newArtistNameSong = newSong.getArtistName();
+            for (Song oldSong : oldListSongs){
+                SongMapper songMapper = new SongMapper();
+                Song tempSong = songMapper.FindById(oldSong.getID());
+                String oldTitleSong = tempSong.getTitle();
+                String oldArtistNameSong = tempSong.getArtistName();
+                if ( !((!newTitleSong.equals(oldTitleSong)) && (!newArtistNameSong.equals(oldArtistNameSong))) ){
+                    i++;
+                }
+            }
+            if (i == oldListSongs.size()) {
+                addedSong.add(newSong);
+            }
+            i = 0;
+        }
+        return addedSong;
+    }
+
+    public static List<Song> removedSongs(SongList newListSongs, List<Song> oldListSongs) throws SQLException {
+        int i = 0;
+        List<Song> addedSong = new ArrayList<Song>();
+        for (Song oldSong : oldListSongs){
+            SongMapper songMapper = new SongMapper();
+            Song tempSong = songMapper.FindById(oldSong.getID());
+            String oldTitleSong = tempSong.getTitle();
+            String oldArtistNameSong = tempSong.getArtistName();
+            for (Song newSong : newListSongs.getSongs()){
+                String newTitleSong = newSong.getTitle();
+                String newArtistNameSong = newSong.getArtistName();
+                if ( !((!oldTitleSong.equals(newTitleSong)) && (!oldArtistNameSong.equals(newArtistNameSong))) ){
+                    i++;
+                }
+            }
+            if (i == newListSongs.getSongs().size()) {
+                addedSong.add(oldSong);
+            }
+            i = 0;
+        }
+        return addedSong;
+    }
+
+
+
     public static void main(String args[]) throws URISyntaxException, IOException, HttpException, ParseException, SQLException, java.text.ParseException {
 
 //        Friend friend = new Friend("Привет", "12.12.1992", "ж");
