@@ -80,5 +80,14 @@
     <orderEntry type="library" name="okhttp-2.5.0" level="project" />
     <orderEntry type="library" name="gson-2.4" level="project" />
     <orderEntry type="library" name="converter-gson-2.0.0-beta2" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-lang-2.4-osgi.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

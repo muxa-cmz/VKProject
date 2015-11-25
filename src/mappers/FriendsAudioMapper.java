@@ -1,6 +1,9 @@
 package mappers;
 
-import entity.*;
+import entity.FriendsAudio;
+import entity.Song;
+import entity.User;
+import entity.UsersFriends;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +20,7 @@ public class FriendsAudioMapper implements IEntityMapperBase<FriendsAudio> {
 
     }
     @Override
-    public void Insert(List<FriendsAudio> friendsAudios) {
+    public void Insert(List<FriendsAudio> friendsAudios) throws SQLException {
         // SQL
         //INSERT INTO FriendsAudio (VkID_Friend, IDAudio) VALUES (friendsAudio.getVkIDFriend(), friendsAudio.getIDAudio());
         String SQL = "";
@@ -32,10 +35,13 @@ public class FriendsAudioMapper implements IEntityMapperBase<FriendsAudio> {
         }
 
         for (FriendsAudio friendsAudio : friendsAudios) {
+            String vkIdFriend = friendsAudio.getVkIDFriend();
+            FriendMapper friendMapper = new FriendMapper();
+            int idFriend = friendMapper.FindByVkId(vkIdFriend).getID();
             for (Song song : friendsAudio.getListAudio()) {
                 try {
                     SQL = "INSERT INTO FriendsAudio (id_friend, id_audio) VALUES ("
-                    + "(SELECT id FROM friends WHERE vkid = \'" + friendsAudio.getVkIDFriend() + "\'),"
+                    + idFriend + ","
                     + "(SELECT id FROM Audio WHERE title = \'" + song.getTitle()
                     + "\' AND id_artist = (SELECT id FROM Artists WHERE name = \'" + song.getArtistName() + "\')))";
                     statement.executeUpdate(SQL);

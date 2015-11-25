@@ -42,7 +42,7 @@ public class UserMapper implements IVkEntityMapperBase<User> {
             System.out.println("Other Error in Main.");
         }
     }
-   @Override
+    @Override
     public void Delete(User user) {
 
     }

@@ -11,7 +11,7 @@ import java.util.List;
 public interface IEntityMapperBase<T>{
     public DBHandler dbHandler = new DBHandler();
     void Update(T object);
-    void Insert(List<T> object);
+    void Insert(List<T> object) throws SQLException;
     void Delete(T object);
 
     T FindById(int id) throws SQLException;

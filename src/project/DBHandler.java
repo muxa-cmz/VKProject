@@ -26,7 +26,7 @@ public class DBHandler<T> {
             properties.setProperty("useUnicode","true");
             properties.setProperty("characterEncoding","utf8");
             //connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/vkproject", "root", "");
-            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/vkproject", properties);
+            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/vkproject_temp", properties);
         }
         catch (SQLException ex){
             System.out.println("SQLException caught");

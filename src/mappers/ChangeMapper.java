@@ -55,7 +55,7 @@ public class ChangeMapper implements IEntityMapperBase<Change> {
             Statement statement = this.dbHandler.getConnection().createStatement();
             ResultSet result = statement.executeQuery(SQL);
             while (result.next()) {
-                changeList.add(new Change(result.getInt("id"), result.getString("date_change"), result.getInt("id_friend"), result.getInt("id_audio"), result.getBoolean("event")));
+                //changeList.add(new Change(result.getInt("id"), result.getString("date_change"), result.getInt("id_friend"), result.getInt("id_audio"), result.getBoolean("event")));
             }
             //else System.out.println("Записи с данными параметрами не существует");
         } catch (SQLException ex){

@@ -10,7 +10,8 @@ public class FriendsAudio extends Entity {
     public FriendsAudio(String vkIDFriend, List<Song> listAudio) {
         VkIDFriend = vkIDFriend;
         //this.IDAudio = IDAudio;
-       this.listAudio = listAudio;
+        this.listAudio = listAudio;
+
     }
 
 //    public String getIDAudio() {

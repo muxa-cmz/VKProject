@@ -61,7 +61,7 @@ public class InsertToDataBase<T> {
         songMapper.Insert(songs);
     }
 
-    public void InsertToFriendsAudioTable(List<FriendsAudio> friendsAudio){
+    public void InsertToFriendsAudioTable(List<FriendsAudio> friendsAudio) throws SQLException {
         FriendsAudioMapper friendsAudioMapper = new FriendsAudioMapper();
         friendsAudioMapper.Insert(friendsAudio);
     }

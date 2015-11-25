@@ -1,26 +1,38 @@
 package entity;
 
+import java.util.List;
+
 /**
  * Created by Михаил on 24.10.2015.
  */
 public class Change extends Entity {
     private String date;
     private int IDFriend;
-    private int IDAudio;
+    private List<Song> listAudio;
+    //private int IDAudio;
     private boolean event;
 
-    public Change(String date, int IDFriend, int IDAudio, boolean event) {
-        this.date = date;
+    public Change(int IDFriend, List<Song> listAudio, boolean event) {
         this.IDFriend = IDFriend;
-        this.IDAudio = IDAudio;
+        //this.IDAudio = IDAudio;
+        this.listAudio.addAll(listAudio);
         this.event = event;
     }
 
-    public Change(int ID, String date, int IDFriend, int IDAudio, boolean event) {
+    public Change(String date, int IDFriend, List<Song> listAudio, boolean event) {
+        this.date = date;
+        this.IDFriend = IDFriend;
+        this.listAudio.addAll(listAudio);
+        //this.IDAudio = IDAudio;
+        this.event = event;
+    }
+
+    public Change(int ID, String date, int IDFriend, List<Song> listAudio, boolean event) {
         this.setID(ID);
         this.date = date;
         this.IDFriend = IDFriend;
-        this.IDAudio = IDAudio;
+        this.listAudio.addAll(listAudio);
+        //this.IDAudio = IDAudio;
         this.event = event;
     }
 
@@ -36,12 +48,12 @@ public class Change extends Entity {
     public void setIDFriend(int IDFriend) {
         this.IDFriend = IDFriend;
     }
-    public int getIDAudio() {
-        return IDAudio;
+    public List<Song> getIDAudio() {
+        return listAudio;
     }
-    public void setIDAudio(int IDAudio) {
-        this.IDAudio = IDAudio;
-    }
+    //public void setIDAudio(int IDAudio) {
+       // this.IDAudio = IDAudio;
+    //}
     public boolean getEvent() {
         return event;
     }
