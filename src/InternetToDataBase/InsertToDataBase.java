@@ -56,7 +56,6 @@ public class InsertToDataBase<T> {
     }
 
     public void InsertToAudioTable(List<Song> songs) throws SQLException {
-        int IDArtist = -1;
         SongMapper songMapper = new SongMapper();
         songMapper.Insert(songs);
     }
@@ -66,6 +65,9 @@ public class InsertToDataBase<T> {
         friendsAudioMapper.Insert(friendsAudio);
     }
 
-
+    public void InsertToChangeTable(List<Change> changes){
+        ChangeMapper changeMapper = new ChangeMapper();
+        changeMapper.Insert(changes);
+    }
 
 }

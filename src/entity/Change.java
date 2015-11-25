@@ -15,7 +15,7 @@ public class Change extends Entity {
     public Change(int IDFriend, List<Song> listAudio, boolean event) {
         this.IDFriend = IDFriend;
         //this.IDAudio = IDAudio;
-        this.listAudio.addAll(listAudio);
+        this.listAudio = listAudio;
         this.event = event;
     }
 

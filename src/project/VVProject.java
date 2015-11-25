@@ -3,10 +3,7 @@ package project;
 import InternetToDataBase.InsertToDataBase;
 import api.Api;
 import entity.*;
-import mappers.FriendMapper;
-import mappers.FriendsAudioMapper;
-import mappers.UserMapper;
-import mappers.UsersFriendsMapper;
+import mappers.*;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.http.HttpException;
 import org.json.simple.parser.ParseException;
@@ -45,7 +42,7 @@ public class VVProject {
         return addedFriend;
     }
 
-    public List<Friend> removedFriends(FriendList newListFriends, List<Friend> oldListFriends){
+    public static List<Friend> removedFriends(FriendList newListFriends, List<Friend> oldListFriends){
         int i = 0;
         List<Friend> removedFriend = new ArrayList<Friend>();
         for (Friend oldFriend : oldListFriends){
@@ -56,7 +53,7 @@ public class VVProject {
                     i++;
                 }
             }
-            if (i == oldListFriends.size()) {
+            if (i == newListFriends.getFriends().size()) {
                 removedFriend.add(oldFriend);
             }
             i = 0;
@@ -180,7 +177,7 @@ public class VVProject {
                 String VkIDUser = user.getVkId();
                 UserMapper userMapper = new UserMapper();
                 int IDUser = userMapper.FindByVkId(VkIDUser).getID();
-
+                List<Change> changes = new ArrayList<Change>();
                 /*Получаем данные из базы данных*/
                 FriendsAudioMapper FAM = new FriendsAudioMapper();
                 List<FriendsAudio> oldFriendsAudioList = new ArrayList<FriendsAudio>();
@@ -198,13 +195,13 @@ public class VVProject {
                 /*Получам свежие данные из vk*/
                 FriendList newListFriends = new FriendList();
                 newListFriends.setFriends(Api.getListFriend(VkIDUser)); // получаем новый список друзей, возможно отличный от базы
-                List<FriendsAudio> newFriendsAudioList = new ArrayList<FriendsAudio>();
-                for (Friend friend : newListFriends.getFriends()){
-                    SongList songs = new SongList();
-                    List<Song> songList = Api.getListSong(friend.getVkId());
-                    songs.setSongs(songList);
-                    newFriendsAudioList.add(new FriendsAudio(friend.getVkId(), songs.getSongs()));
-                }
+                //List<FriendsAudio> newFriendsAudioList = new ArrayList<FriendsAudio>();
+//                for (Friend friend : newListFriends.getFriends()){
+//                    SongList songs = new SongList();
+//                    List<Song> songList = Api.getListSong(friend.getVkId());
+//                    songs.setSongs(songList);
+//                    newFriendsAudioList.add(new FriendsAudio(friend.getVkId(), songs.getSongs()));
+//                }
 
                 /*Проверка на то что у нашего чувака не появилось новых друзей*/
                 List<Friend> addedFriend = new ArrayList<Friend>();
@@ -229,17 +226,49 @@ public class VVProject {
                 if (addedFriend.size() != 0){
                     IDB.InsertToFriendsTable(addedFriend);
                     IDB.InsertToUsersFriendsTable(user, addedFriend);
-                    List<Change> changes = new ArrayList<Change>();
+                    FriendMapper addedFriendMapper = new FriendMapper();
+
                     for (Friend friend : addedFriend){
                         SongList songs = new SongList();
                         List<Song> songList = Api.getListSong(friend.getVkId());
                         songs.setSongs(songList);
                         IDB.InsertToArtistsTable(songs.getSongs());
                         IDB.InsertToAudioTable(songs.getSongs());
-                        changes.add(new Change(friend.getID(), songs.getSongs(), true));
+                        changes.add(new Change(addedFriendMapper.FindByVkId(friend.getVkId()).getID(), songs.getSongs(), true));
                     }
                 }
 
+
+                /* Находим удалившихся(удаленных) друзей и все их аудиозаписи помечаем как удаленные */
+                /* Так же необходимо пройти по таблице Change и проверить записи с event true, и так же пометить их как удаленные*/
+                List<Friend> removedFriend = new ArrayList<Friend>();
+                removedFriend.addAll(removedFriends(newListFriends, oldListFriend));
+
+                if (removedFriend.size() != 0){
+                    FriendMapper removedFriendMapper = new FriendMapper();
+                    FriendsAudioMapper friendsAudioMapper = new FriendsAudioMapper();
+                    ChangeMapper changeMapper = new ChangeMapper();
+                    for (Friend friend : removedFriend){
+                        int idFriend = removedFriendMapper.FindByVkId(friend.getVkId()).getID();
+                        List<Integer> idAudioForFriend = new ArrayList<Integer>();
+                        idAudioForFriend.addAll(friendsAudioMapper.getIDAudioForFriend(idFriend));
+                        SongMapper songMapper = new SongMapper();
+                        SongList songs = new SongList();
+                        List<Song> songList = new ArrayList<Song>();
+                        for (int idSong : idAudioForFriend){
+                            songList.add(songMapper.FindById(idSong));
+                        }
+                        List<Integer> idSongList =new ArrayList<Integer>();
+                        idSongList.addAll(changeMapper.FindByEvent(friend.getID(), true));
+                        for (int idSong : idSongList){
+                            songList.add(songMapper.FindById(idSong));
+                        }
+                        songs.setSongs(songList);
+                        changes.add(new Change(removedFriendMapper.FindByVkId(friend.getVkId()).getID(), songs.getSongs(), false));
+                    }
+                }
+
+                IDB.InsertToChangeTable(changes);
                 /*Алгоритм вычисления изменений о первоначальном состоянии БД для пользователя*/
 
 

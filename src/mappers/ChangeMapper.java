@@ -1,6 +1,7 @@
 package mappers;
 
 import entity.Change;
+import entity.Song;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,11 +23,15 @@ public class ChangeMapper implements IEntityMapperBase<Change> {
         try {
             this.dbHandler.openConnection();
             Statement statement = this.dbHandler.getConnection().createStatement();
+            SongMapper songMapper = new SongMapper();
             for (Change change : changes) {
                 int event = (change.getEvent()) ? 1 : 0;  // true/false перевод в int 1/0
-                SQL = "INSERT INTO Changes (date_change, id_friend, id_audio, event) VALUES (\"" + change.getDate()
-                        + "\",\"" + change.getIDFriend() + "\",\"" + change.getIDAudio() + "\",\"" + event + "\")";
-                statement.executeUpdate(SQL);
+                for (Song song : change.getIDAudio()){
+                    int idAudio = songMapper.FindByTitle(song.getTitle()).getID();
+                    SQL = "INSERT INTO Changes (date_change, id_friend, id_audio, event) VALUES (\"" + change.getDate()
+                            + "\",\"" + change.getIDFriend() + "\",\"" + idAudio + "\",\"" + event + "\")";
+                    statement.executeUpdate(SQL);
+                }
             }
         }catch (SQLException ex){
             System.out.println("SQLException caught");
@@ -48,14 +53,16 @@ public class ChangeMapper implements IEntityMapperBase<Change> {
 
     }
 
-    private List<Change> FindBy(String SQL){
-        List<Change> changeList = new ArrayList<Change>();
+    private List<Integer> FindBy(String SQL){
+        List<Integer> songList = new ArrayList<Integer>();
         try {
             this.dbHandler.openConnection();
             Statement statement = this.dbHandler.getConnection().createStatement();
             ResultSet result = statement.executeQuery(SQL);
             while (result.next()) {
-                //changeList.add(new Change(result.getInt("id"), result.getString("date_change"), result.getInt("id_friend"), result.getInt("id_audio"), result.getBoolean("event")));
+                songList.add(result.getInt("id_audio"));
+//                changeList.add(new Change(result.getInt("id"), result.getString("date_change")
+//                        , result.getInt("id_friend"), result.getInt("id_audio"), result.getBoolean("event")));
             }
             //else System.out.println("Записи с данными параметрами не существует");
         } catch (SQLException ex){
@@ -72,17 +79,24 @@ public class ChangeMapper implements IEntityMapperBase<Change> {
         catch (Exception ex) {
             System.out.println("Other Error in Main.");
         }
-        return changeList;
+        return songList;
     }
     @Override
     public Change FindById(int id) {
-        String SQL = "SELECT * FROM Changes WHERE id = " + id;
-        Change change = FindBy(SQL).get(0);
-        return change;
+//        String SQL = "SELECT * FROM Changes WHERE id = " + id;
+//        Change change = FindBy(SQL).get(0);
+        return null;
     }
-    public List<Change> FindByIdFriend(int idFriend) {
-        String SQL = "SELECT * FROM Changes WHERE id_Friend = " + idFriend;
-        List<Change> change = FindBy(SQL);
+//    public List<Change> FindByIdFriend(int idFriend) {
+//        String SQL = "SELECT * FROM Changes WHERE id_Friend = " + idFriend;
+//        List<Change> change = FindBy(SQL);
+//        return change;
+//    }
+
+    public List<Integer> FindByEvent(int idFriend, boolean event) {
+        int eventInt = event ? 1 : 0;
+        String SQL = "SELECT * FROM Changes WHERE event = " + eventInt + " AND id_friend = " + idFriend;
+        List<Integer> change = FindBy(SQL);
         return change;
     }
 
