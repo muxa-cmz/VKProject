@@ -5,7 +5,6 @@ import entity.Song;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,15 +60,16 @@ public class SongMapper implements IEntityMapperBase<Song> {
 
     }
 
-    private List<Song> FindBy(String SQL) throws SQLException {
-        List<Song> songList = new ArrayList<Song>();
+    private Song FindBy(String SQL) throws SQLException {
+        Song song = null;
         try {
             this.dbHandler.openConnection();
             Statement statement = this.dbHandler.getConnection().createStatement();
             ResultSet result = statement.executeQuery(SQL);
-            while (result.next()) {
-                songList.add(new Song(result.getInt("id"), result.getString("name"), result.getString("title")));
-            }
+            //while (result.next()) {
+            result.next();
+            song = new Song(result.getInt("id"), result.getString("name"), result.getString("title"));
+            //}
             //else System.out.println("Записи с данными параметрами не существует");
         } catch (SQLException ex){
             System.out.println("SQLException caught");
@@ -85,7 +85,7 @@ public class SongMapper implements IEntityMapperBase<Song> {
         catch (Exception ex) {
             System.out.println("Other Error in Main.");
         }
-        return songList;
+        return song;
     }
     @Override
     public Song FindById(int id) throws SQLException {
@@ -97,19 +97,19 @@ public class SongMapper implements IEntityMapperBase<Song> {
                 + "FROM Audio a1 "
                 + "WHERE a1.id = " + id + ")) artist_name "
                 + "WHERE Audio.id = " + id;
-        Song song = FindBy(SQL).get(0);
+        Song song = FindBy(SQL);
         return song;
     }
 
     public List<Song> FindByIDArtist(int idArtist) throws SQLException {
         String SQL = "SELECT id, id_artist as name, title  FROM Audio WHERE id_artist = " + idArtist;
-        List<Song> songList = FindBy(SQL);
-        return songList;
+        //List<Song> songList = FindBy(SQL);
+        return null;
     }
 
     public Song FindByTitle(String title) throws SQLException {
         String SQL = "SELECT id, id_artist as name, title  FROM Audio WHERE title = '" + title + "'";
-        Song song = FindBy(SQL).get(0);
+        Song song = FindBy(SQL);
         return song;
     }
 }

@@ -1,9 +1,6 @@
 package mappers;
 
-import entity.FriendsAudio;
-import entity.Song;
-import entity.User;
-import entity.UsersFriends;
+import entity.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -98,6 +95,44 @@ public class FriendsAudioMapper implements IEntityMapperBase<FriendsAudio> {
 //        UsersFriends artist = FindBy(SQL).get(0);
         return null;
     }
+
+
+    public SongList getSongListForFriend(int IDFriend){
+        //String SQL = "SELECT id_audio FROM friendsaudio WHERE id_friend = " + IDFriend;
+        String SQL = "SELECT id, title, (SELECT name FROM artists WHERE id = audio.id_artist) as name "
+                + "FROM audio "
+                + "WHERE id in "
+                +        "(SELECT id_audio "
+                +                "FROM friendsaudio "
+                +                "WHERE id_friend = " + IDFriend + ")";
+        SongList songList = new SongList();
+        List<Song> listIDAudio = new ArrayList<Song>();
+        try {
+            this.dbHandler.openConnection();
+            Statement statement = this.dbHandler.getConnection().createStatement();
+            ResultSet result = statement.executeQuery(SQL);
+            while (result.next()) {
+                listIDAudio.add(new Song(result.getInt("id"), result.getString("name"), result.getString("title")));
+            }
+            songList.setSongs(listIDAudio);
+        } catch (SQLException ex){
+            System.out.println("SQLException caught");
+            System.out.println("---");
+            while ( ex != null ) {
+                System.out.println("Message   : " + ex.getMessage());
+                System.out.println("SQLState  : " + ex.getSQLState());
+                System.out.println("ErrorCode : " + ex.getErrorCode());
+                System.out.println("---");
+                ex = ex.getNextException();
+            }
+        }
+        catch (Exception ex) {
+            System.out.println("Other Error in Main.");
+        }
+        return songList;
+    }
+
+
 
     public List<Integer> getIDAudioForFriend(int IDFriend){
         String SQL = "SELECT id_audio FROM friendsaudio WHERE id_friend = " + IDFriend;
