@@ -11,7 +11,10 @@ import org.json.simple.parser.ParseException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,7 +137,7 @@ public class VVProject {
 //
 //        myThready.start();	//Запуск потока
         StopWatch stopWatch = new StopWatch();
-        FileWriter writer = new FileWriter("C:\\Users\\Михаил\\Desktop\\log_vk.txt", true);
+        FileWriter writer = new FileWriter("C:\\Users\\valer\\Desktop\\log_vk.txt", true);
         User user = Api.getUserInfo();
         InsertToDataBase IDB = new InsertToDataBase();
         String text = "";
@@ -383,6 +386,57 @@ public class VVProject {
                 updateHandler.insertChangeTable();
 
 
+
+                break;
+            }
+            // записать в таблицу topartist топ 100 исполнителей среди всех данных базы
+            case 3: {
+                List<String> artists = new ArrayList<String>();
+                DBHandler dbHandler = new DBHandler();
+                dbHandler.openConnection();
+
+                // запрос к базе
+                String selectTableSQL = "SELECT ID, (SELECT NAME FROM ARTISTS WHERE ID = AUDIO.ID_ARTIST) ARTIST FROM AUDIO";
+                Connection dbConnection;
+                Statement statement;
+
+                try {
+                    dbConnection = dbHandler.getConnection();
+                    statement = dbConnection.createStatement();
+
+                    // выбираем данные с БД
+                    ResultSet rs = statement.executeQuery(selectTableSQL);
+
+                    while (rs.next()) {
+                        String artist = rs.getString("ARTIST");
+                        //String title = rs.getString("TITLE");
+                        artists.add(artist);
+                    }
+                    dbConnection.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                dbHandler.closeConnection();
+                // здесь получили список всех артистов базы - artists
+
+                // получаем топ исполнителей
+                List<TopPosition> top = new ArrayList<TopPosition>();
+                top.addAll(TopManager.getTop(artists));
+
+                // записываем топ в базу (первые 100 позиций)
+                dbHandler.openConnection();
+                try {
+                    dbConnection = dbHandler.getConnection();
+                    statement = dbConnection.createStatement();
+                    for (int i = 0; i < 100; i++) {
+                        TopPosition topPosition = top.get(i);
+                        String insertTableSQL = "INSERT INTO TOPARTIST (NAME, COUNT) VALUES ('"+ topPosition.getTitle() +"'," + topPosition.getCount() + ")";
+                        statement.executeUpdate(insertTableSQL);
+                    }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                dbHandler.closeConnection();
 
                 break;
             }
