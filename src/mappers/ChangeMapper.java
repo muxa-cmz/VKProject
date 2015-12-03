@@ -28,8 +28,8 @@ public class ChangeMapper implements IEntityMapperBase<Change> {
                 int event = (change.getEvent()) ? 1 : 0;  // true/false перевод в int 1/0
                 for (Song song : change.getIDAudio()){
                     int idAudio = songMapper.FindByTitle(song.getTitle()).getID();
-                    SQL = "INSERT INTO Changes (date_change, id_friend, id_audio, event) VALUES (\"" + change.getDate()
-                            + "\",\"" + change.getIDFriend() + "\",\"" + idAudio + "\",\"" + event + "\")";
+                    SQL = "INSERT INTO Changes (date_change, id_friend, id_audio, event) VALUES ( DATE_FORMAT(CURRENT_DATE(), '%Y-%m-%d')"
+                            + ", \"" + change.getIDFriend() + "\",\"" + idAudio + "\",\"" + event + "\")";
                     statement.executeUpdate(SQL);
                 }
             }
