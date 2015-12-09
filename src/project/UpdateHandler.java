@@ -2,7 +2,7 @@
 package project;
 
 import InternetToDataBase.InsertToDataBase;
-import api.Api;
+import api.IApi;
 import entity.*;
 import mappers.*;
 
@@ -19,8 +19,10 @@ public class UpdateHandler {
     private FriendList newListFriends;
     private List<Change> changes;
     private InsertToDataBase IDB;
+    private IApi Api;
 
-    public UpdateHandler() {
+    public UpdateHandler(IApi Api) {
+        this.Api = Api;
         this.oldListFriend = new ArrayList<Friend>();
         this.newListFriends = new FriendList();
         this.changes = new ArrayList<Change>();
@@ -74,7 +76,7 @@ public class UpdateHandler {
             for (Song oldSong : oldListSongs.getSongs()){
                 String oldTitleSong = oldSong.getTitle();
                 String oldArtistNameSong = oldSong.getArtistName();
-                if (  !(!newTitleSong.equals(oldTitleSong) &  (!newArtistNameSong.equals(oldArtistNameSong)))  ){
+                if (  !(!newTitleSong.equals(oldTitleSong) & (!newArtistNameSong.equals(oldArtistNameSong)))  ){
                     i++;
                 }
             }
